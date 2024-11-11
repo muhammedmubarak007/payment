@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPI Payment Example</title>
+</head>
+<body>
+  <h1>UPI Payment Example</h1>
+  
+  <!-- Amount Input -->
+  <label for="amount">Enter Amount:</label>
+  <input type="number" id="amount" placeholder="Enter amount" required>
+
+  <!-- UPI Platform Selection -->
+  <label for="upi-platform">Select UPI Platform:</label>
+  <select id="upi-platform">
+    <option value="upi">Default UPI App</option>
+    <option value="google">Google Pay</option>
+    <option value="phonepe">PhonePe</option>
+    <option value="paytm">Paytm</option>
+    <option value="bhim">BHIM</option>
+  </select>
+
+  <!-- Pay Now Button -->
+  <button onclick="initiateUPIPayment()">Pay Now</button>
+
+  <script>
+    function initiateUPIPayment() {
+      // UPI details
+      const vpa = encodeURIComponent('muhammedmubarak302@oksbi');      // Replace with the UPI ID you want to receive payment
+      const name = encodeURIComponent('Muhammed Mubarak');             // Replace with your name or merchant name
+      const currency = 'INR';
+      const amount = encodeURIComponent(document.getElementById('amount').value);
+
+      if (amount === '') {
+        alert('Please enter an amount.');
+        return;
+      }
+
+      // Get the selected UPI platform
+      const platform = document.getElementById('upi-platform').value;
+      let upiUrl;
+
+      // Construct UPI payment URL based on the selected platform
+      if (platform === 'google') {
+        // Google Pay universal link
+        upiUrl = `https://pay.google.com/gp/p/ui/pay?pa=${vpa}&pn=${name}&am=${amount}&cu=${currency}`;
+      } else if (platform === 'phonepe') {
+        // PhonePe URI
+        upiUrl = `phonepe://pay?pa=${vpa}&pn=${name}&am=${amount}&cu=${currency}`;
+      } else if (platform === 'paytm') {
+        // Paytm URI
+        upiUrl = `paytmmp://pay?pa=${vpa}&pn=${name}&am=${amount}&cu=${currency}`;
+      } else if (platform === 'bhim') {
+        // BHIM UPI URI
+        upiUrl = `bhimupi://pay?pa=${vpa}&pn=${name}&am=${amount}&cu=${currency}`;
+      } else {
+        // Default UPI URI (will prompt user to choose an app)
+        upiUrl = `upi://pay?pa=${vpa}&pn=${name}&am=${amount}&cu=${currency}`;
+      }
+
+      // Redirect to the UPI payment URL
+      window.location.href = upiUrl;
+    }
+  </script>
+</body>
+</html>
